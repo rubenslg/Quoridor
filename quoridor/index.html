@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ro">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quoridor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body class="bg-gray-200 p-6">
+
+    <h1 class="text-3xl font-bold text-center mb-6">Quoridor</h1>
+
+    <div class="flex gap-6 justify-center flex-wrap items-start">
+
+        <!-- Jucator 1 -->
+        <div class="bg-white border border-gray-300 rounded-lg p-4 w-52 shadow">
+
+            <h2 class="font-bold text-lg mb-3">Jucător 1</h2>
+
+            <label class="text-sm text-gray-600">Nume:</label>
+            <input id="p1-name" type="text" value="Jucător 1" class="input-field mb-3" />
+
+            <label class="text-sm text-gray-600">Culoare pion:</label>
+            <div id="p1-colors" class="flex gap-2 flex-wrap mt-1 mb-3">
+                <div class="color-dot selected" style="background:#e63946;" data-player="1" data-color="#e63946"></div>
+                <div class="color-dot" style="background:#4caf50;" data-player="1" data-color="#4caf50"></div>
+                <div class="color-dot" style="background:#ff9800;" data-player="1" data-color="#ff9800"></div>
+                <div class="color-dot" style="background:#9c27b0;" data-player="1" data-color="#9c27b0"></div>
+                <div class="color-dot" style="background:#00bcd4;" data-player="1" data-color="#00bcd4"></div>
+            </div>
+
+            <p class="text-sm">Ziduri rămase: <strong id="p1-walls">10</strong></p>
+            <p class="text-sm text-gray-500 mt-1">Scop: rândul de <strong>sus ↑</strong></p>
+
+            <div id="p1-turn-badge" class="turn-badge active mt-3">✔ Tura ta!</div>
+        </div>
+
+        <!-- Centru -->
+        <div class="flex flex-col items-center gap-3">
+
+            <!-- Status -->
+            <div class="bg-white border border-gray-300 rounded px-4 py-2 text-sm font-semibold shadow">
+                Tura: <span id="current-player-name">Jucător 1</span>
+            </div>
+
+            <!-- Mod de joc -->
+            <div class="flex gap-2">
+                <button id="btn-move" class="btn btn-active" onclick="setMode('move')">♟ Mișcă Pion</button>
+                <button id="btn-wall-h" class="btn" onclick="setMode('wall-h')">— Zid Orizontal</button>
+                <button id="btn-wall-v" class="btn" onclick="setMode('wall-v')">| Zid Vertical</button>
+            </div>
+
+            <!-- Canvas P5.js -->
+            <div id="canvas-container" class="border-2 border-gray-400 rounded shadow"></div>
+
+            <!-- Optiuni tabla -->
+            <div class="flex items-center gap-2 text-sm">
+                <label>Dimensiune tablă:</label>
+                <select id="board-size" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white">
+                    <option value="7">7 × 7</option>
+                    <option value="9" selected>9 × 9</option>
+                    <option value="11">11 × 11</option>
+                </select>
+            </div>
+
+            <!-- Butoane reset / undo -->
+            <div class="flex gap-2">
+                <button class="btn" onclick="resetGame()">↺ Reset</button>
+                <button class="btn" onclick="undoMove()">← Undo</button>
+            </div>
+
+            <!-- Istoric -->
+            <div class="bg-white border border-gray-300 rounded p-3 w-full shadow text-sm">
+                <p class="font-semibold mb-2">Istoric mutări:</p>
+                <div id="history" class="text-gray-600 max-h-36 overflow-y-auto space-y-1">
+                    <p class="italic text-gray-400">Nicio mutare încă...</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Jucator 2 -->
+        <div class="bg-white border border-gray-300 rounded-lg p-4 w-52 shadow">
+
+            <h2 class="font-bold text-lg mb-3">Jucător 2</h2>
+
+            <label class="text-sm text-gray-600">Nume:</label>
+            <input id="p2-name" type="text" value="Jucător 2" class="input-field mb-3" />
+
+            <label class="text-sm text-gray-600">Culoare pion:</label>
+            <div id="p2-colors" class="flex gap-2 flex-wrap mt-1 mb-3">
+                <div class="color-dot" style="background:#e63946;" data-player="2" data-color="#e63946"></div>
+                <div class="color-dot selected" style="background:#2196f3;" data-player="2" data-color="#2196f3"></div>
+                <div class="color-dot" style="background:#4caf50;" data-player="2" data-color="#4caf50"></div>
+                <div class="color-dot" style="background:#ff9800;" data-player="2" data-color="#ff9800"></div>
+                <div class="color-dot" style="background:#9c27b0;" data-player="2" data-color="#9c27b0"></div>
+            </div>
+
+            <p class="text-sm">Ziduri rămase: <strong id="p2-walls">10</strong></p>
+            <p class="text-sm text-gray-500 mt-1">Scop: rândul de <strong>jos ↓</strong></p>
+
+            <div id="p2-turn-badge" class="turn-badge mt-3">Așteaptă...</div>
+
+            <!-- Reguli rapide -->
+            <div class="mt-4 text-xs text-gray-500 border-t pt-3 space-y-1">
+                <p class="font-semibold text-gray-600">Reguli rapide:</p>
+                <p>• Mișcă pionul pe o celulă adiacentă</p>
+                <p>• Sau plasează un zid (2 celule lungime)</p>
+                <p>• Fiecare jucător are 10 ziduri</p>
+                <p class="italic">* Logica completă în Status 2</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Librarii -->
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+
+    <!-- Fisierele jocului -->
+    <script src="gameState.js"></script>
+    <script src="board.js"></script>
+    <script src="pawns.js"></script>
+    <script src="walls.js"></script>
+    <script src="ui.js"></script>
+    <script src="sketch.js"></script>
+
+</body>
+</html>
