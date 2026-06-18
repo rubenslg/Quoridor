@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proiect Quoridor - Modular</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1 class="game-title">Joc Quoridor</h1>
+
+        <div class="settings-box">
+            <div class="player-setting">
+                <label>Nume Jucător 1 (Jos):</label>
+                <input type="text" id="numeJ1" value="Ana">
+                <label>Culoare:</label>
+                <input type="color" id="culoareJ1" value="#ff0000">
+            </div>
+
+            <div class="player-setting">
+                <label>Nume Jucător 2 / Robot (Sus):</label>
+                <input type="text" id="numeJ2" value="Calculator">
+                <label>Culoare:</label>
+                <input type="color" id="culoareJ2" value="#0000ff">
+            </div>
+
+            <div class="mode-setting">
+                <label>Mod de Joc:</label>
+                <select id="modJoc">
+                    <option value="human">Om vs Om (Human-Human)</option>
+                    <option value="easy">Om vs Calculator (Easy - Random)</option>
+                    <option value="moderate">Om vs Calculator (Moderate - Backtracking)</option>
+                </select>
+            </div>
+
+            <div class="mode-setting">
+                <label>Acțiune Curentă (ce faci la click pe tablă):</label>
+                <select id="tipActiune">
+                    <option value="muta">Mută Pionul</option>
+                    <option value="zid_O">Pune Zid Orizontal</option>
+                    <option value="zid_V">Pune Zid Vertical</option>
+                </select>
+            </div>
+
+            <div class="action-setting">
+                <button onclick="startGame()" class="btn-start">Start / Resetare Joc</button>
+            </div>
+        </div>
+
+        <div class="status-container">
+            <h2 id="mesajRand">Apasă Start pentru a începe!</h2>
+            <p id="ziduriStatus">Ziduri rămase — J1: <span id="ziduriJ1">10</span> &nbsp;|&nbsp; J2: <span id="ziduriJ2">10</span></p>
+        </div>
+
+        <div id="canvas-container"></div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="board.js"></script>
+    <script src="player.js"></script>
+    <script src="ai.js"></script>
+    <script src="sketch.js"></script>
+</body>
+</html>
